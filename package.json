@@ -1,0 +1,46 @@
+{
+  "name": "presenter",
+  "version": "1.0.0",
+  "description": "a simple but deadly ts presentation toolkit",
+  "main": "dist/index.min.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "jsdelivr": "dist/index.min.js",
+  "unpkg": "dist/index.min.js",
+  "types": "dist/index.d.ts",
+  "repository": "git@github.com:stardisblue/presenter.git",
+  "author": "stardisblue <stardisblue@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "pretest": "npm run build"
+  },
+  "dependencies": {
+    "@types/d3-selection": "^3.0.2",
+    "@types/d3-transition": "^3.0.1",
+    "@types/highlight.js": "^10.1.0",
+    "@types/katex": "^0.14.0",
+    "@types/lodash.keyby": "^4.6.7",
+    "@types/lodash.range": "^3.2.7",
+    "@types/marked": "^4.0.3",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
+    "highlight.js": "^11.6.0",
+    "htl": "^0.3.1",
+    "katex": "^0.16.0",
+    "lodash.keyby": "^4.6.0",
+    "lodash.range": "^3.2.0",
+    "marked": "^4.0.18"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.3",
+    "rollup": "^2.77.0",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  }
+}
