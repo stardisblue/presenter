@@ -20,7 +20,12 @@ export default [
   // browser-friendly UMD build
   {
     input: "src/index.ts",
-    output: { name: pkg.name, file: pkg.browser, format: "umd" },
+    output: {
+      name: pkg.name,
+      file: pkg.browser,
+      format: "umd",
+      exports: "named",
+    },
     plugins: [
       resolve(), // so Rollup can find dependencies
       commonjs(), // so Rollup can convert dependencies to an ES module
