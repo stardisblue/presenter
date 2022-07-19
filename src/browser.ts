@@ -1,3 +1,5 @@
+import "./styles.css";
+
 import { navigation } from "./navigation";
 import { PageData, PageState, Presentation } from "./presentation";
 

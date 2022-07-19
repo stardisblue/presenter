@@ -54,7 +54,7 @@ export const defaultFooter = ({ page, nav }: PageData) => {
 
 function SimplePage<T>(
   { template = "full", ...props }: PageObject,
-  data: T
+  data?: T
 ): PageElement {
   const $title = html<HTMLHeadingElement>`<h2 class="page-title">
     ${create(props.title, data)}
@@ -68,7 +68,7 @@ function SimplePage<T>(
     )}
   </div>`;
 
-  const $background = html`<div class="presenter-background"></div>`;
+  const $background = html`<div class="page-background"></div>`;
 
   const $page = html`<div class="presenter-page"
     />${$background}
@@ -93,14 +93,14 @@ function SimplePage<T>(
   return $RenderSimplePage;
 }
 
-type PageState<D> = PageObject | ((data: D) => PageObject);
+export type PageState<D> = PageObject | ((data?: D) => PageObject);
 
-export function Pages({
+export function Presentation({
   lazy = 2,
   Template = SimplePage,
 }: {
   lazy?: number;
-  Template?: (props: PageObject, data: any) => PageElement;
+  Template?: (props: PageObject, data?: any) => PageElement;
 } = {}) {
   const cache = new Map<PageState<any>, PageElement>();
   const history = new Map<PageState<any>, number>();
@@ -109,7 +109,7 @@ export function Pages({
   const $container = html`<div class="presenter" tabindex="0" />`;
 
   return Object.assign($container, {
-    load<T>(newState: PageState<T>, data: T) {
+    load<T>(newState: PageState<T>, data?: T) {
       //   console.log('load', cache.has(newState), data);
       let currentPage;
       if (cache.has(newState)) {
@@ -139,9 +139,7 @@ export function Pages({
         }
       });
     },
-    preload<T>(step: number, newState: PageState<T>, data: T) {
-      if (step > lazy) return false; // do not preload more pages than necessary
-
+    preload<T>(newState: PageState<T>, data?: T) {
       if (!cache.has(newState)) {
         // checks in cache
         const props = typeof newState === "object" ? newState : newState(data);
@@ -152,13 +150,7 @@ export function Pages({
       }
 
       history.set(newState, steps); // update ranking in history
-
-      return true;
     },
-    // logState() {
-    //   console.log(steps);
-    //   history.forEach(console.log);
-    // },
   });
 }
 

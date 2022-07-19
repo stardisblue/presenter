@@ -78,14 +78,14 @@ export function navigation({
       }
       return nav;
     },
-    bind: ($div: HTMLElement) => {
-      $div.addEventListener("pointerup", nav.events.onClick);
-      $div.addEventListener("keydown", nav.events.onKeyDown);
-      $div.addEventListener("contextmenu", preventDefault);
-      $div.addEventListener("mouseenter", focus);
+    bind: (el: HTMLElement) => {
+      el.addEventListener("pointerup", nav.events.onClick);
+      el.addEventListener("keydown", nav.events.onKeyDown);
+      el.addEventListener("contextmenu", preventDefault);
+      el.addEventListener("mouseenter", focus);
       // $div.addEventListener('mouseleave', blur)
 
-      $div.focus();
+      el.focus();
       return nav;
     },
     on(type: "previous" | "next" | "page", listener?: NavigationCallback) {

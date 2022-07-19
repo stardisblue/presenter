@@ -14,7 +14,7 @@ declare function navigation({ max, previousKeys, nextKeys, stopPropagation, }?: 
     nextPage(event?: UIEvent): any;
     collect(offset?: number): number[];
     page(goto: number): any;
-    bind: ($div: HTMLElement) => any;
+    bind: (el: HTMLElement) => any;
     on(type: "previous" | "next" | "page", listener?: NavigationCallback): any;
     first(): void;
     events: {
@@ -41,13 +41,14 @@ declare type PageElement = HTMLElement & {
     $footer: HTMLElement;
     render: () => void;
 };
-declare type PageState<D> = PageObject | ((data: D) => PageObject);
-declare function Pages({ lazy, Template, }?: {
+declare const defaultFooter: ({ page, nav }: PageData) => HTMLFormElement;
+declare type PageState<D> = PageObject | ((data?: D) => PageObject);
+declare function Presentation({ lazy, Template, }?: {
     lazy?: number;
-    Template?: (props: PageObject, data: any) => PageElement;
+    Template?: (props: PageObject, data?: any) => PageElement;
 }): HTMLElement & {
-    load<T>(newState: PageState<T>, data: T): void;
-    preload<T_1>(step: number, newState: PageState<T_1>, data: T_1): boolean;
+    load<T>(newState: PageState<T>, data?: T | undefined): void;
+    preload<T_1>(newState: PageState<T_1>, data?: T_1 | undefined): void;
 };
 
 declare const md: (strings: TemplateStringsArray, ..._args: any[]) => Element;
@@ -57,4 +58,26 @@ declare const tex: ((strings: TemplateStringsArray, ...args: any[]) => Element) 
     block: (strings: TemplateStringsArray, ...args: any[]) => Element;
 };
 
-export { Pages, md, mdi, navigation, tex };
+declare function create(container: HTMLElement, pages: PageState<PageData>[]): {
+    pres: HTMLElement & {
+        load<T>(newState: PageState<T>, data?: T | undefined): void;
+        preload<T_1>(newState: PageState<T_1>, data?: T_1 | undefined): void;
+    };
+    nav: {
+        current: number;
+        max: number;
+        previousPage(event?: UIEvent | undefined): any;
+        nextPage(event?: UIEvent | undefined): any;
+        collect(offset?: number): number[];
+        page(goto: number): any;
+        bind: (el: HTMLElement) => any;
+        on(type: "previous" | "next" | "page", listener?: ((page: number, previous: number, nav: any) => void) | undefined): any;
+        first(): void;
+        events: {
+            onClick(event: MouseEvent): void;
+            onKeyDown(event: KeyboardEvent): void;
+        };
+    };
+};
+
+export { Presentation, create, defaultFooter, md, mdi, navigation, tex };

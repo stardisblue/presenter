@@ -1,3 +1,4 @@
+import "./styles.css";
 import { navigation } from "./navigation";
 import { PageData, PageState, Presentation } from "./presentation";
 export { html, svg } from "htl";
@@ -26,4 +27,4 @@ export declare function create(container: HTMLElement, pages: PageState<PageData
         };
     };
 };
-//# sourceMappingURL=index.d.ts.map
+//# sourceMappingURL=browser.d.ts.map

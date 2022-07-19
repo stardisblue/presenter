@@ -3,8 +3,9 @@ import { readFileSync } from "fs";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
-import { terser } from "rollup-plugin-terser";
+// import { terser } from "rollup-plugin-terser";
 import dts from "rollup-plugin-dts";
+import postcss from "rollup-plugin-postcss";
 
 import pkg from "./package.json";
 
@@ -19,7 +20,7 @@ const preamble = `// ${pkg.homepage} v${pkg.version} Copyright ${copyright}`;
 export default [
   // browser-friendly UMD build
   {
-    input: "src/index.ts",
+    input: "src/browser.ts",
     output: {
       name: pkg.name,
       file: pkg.browser,
@@ -30,7 +31,8 @@ export default [
       typescript({ tsconfig: "./tsconfig.json" }), // so Rollup can convert TypeScript to JavaScript
       resolve(), // so Rollup can find dependencies
       commonjs(), // so Rollup can convert dependencies to an ES module
-      terser({ output: { preamble } }), // so Rollup can minify
+      postcss({ extract: true }),
+      // terser({ output: { preamble } }), // so Rollup can minify (done by default by most cdns)
     ],
   },
 

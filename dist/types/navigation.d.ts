@@ -12,7 +12,7 @@ export declare function navigation({ max, previousKeys, nextKeys, stopPropagatio
     nextPage(event?: UIEvent): any;
     collect(offset?: number): number[];
     page(goto: number): any;
-    bind: ($div: HTMLElement) => any;
+    bind: (el: HTMLElement) => any;
     on(type: "previous" | "next" | "page", listener?: NavigationCallback): any;
     first(): void;
     events: {

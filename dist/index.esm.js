@@ -1,138 +1,11 @@
-// undefined v1.0.0 Copyright (c) 2021 Fati CHEN
-import { html } from 'htl';
-export { html, svg } from 'htl';
+// https://github.com/stardisblue/presenter v1.0.0 Copyright (c) 2021 Fati CHEN
 import keyBy from 'lodash.keyby';
 import range from 'lodash.range';
+import { html } from 'htl';
+export { html, svg } from 'htl';
 import { marked } from 'marked';
 import hljs from 'highlight.js/lib/common';
 import katex from 'katex';
-
-const defaultFooter = ({ page, nav }) => {
-    const $number = html `<span>${page}</span>`;
-    const $range = html `<input
-    type="range"
-    value=${page}
-    step="1"
-    min="1"
-    max=${nav.max}
-  />`;
-    const $form = html `<form class="footer-form">
-    ${$range} ${$number}/${nav.max}
-  </form>`;
-    $form.addEventListener("pointerup", (e) => e.stopPropagation());
-    $form.addEventListener("change", (e) => {
-        e.stopPropagation();
-        nav.page($range.valueAsNumber - 1);
-        $range.valueAsNumber = page;
-        $number.innerHTML = "" + page;
-    });
-    $range.addEventListener("input", () => {
-        $number.innerHTML = $range.value;
-    });
-    return $form;
-};
-function SimplePage({ template = "full", ...props }, data) {
-    var _a;
-    const $title = html `<h2 class="page-title">
-    ${create(props.title, data)}
-  </h2>`;
-    const $content = html `<div class="page-content"></div>`;
-    const $footer = html `<div class="page-footer">
-    ${create(template === "title" ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
-  </div>`;
-    const $background = html `<div class="presenter-background"></div>`;
-    const $page = html `<div class="presenter-page"
-    />${$background}
-    <div class="page-container">${$title}${$content}${$footer}</div></div>`;
-    $page.classList.toggle("page-centered", template === "title");
-    $content.classList.toggle("page-full", template === "full");
-    const $RenderSimplePage = Object.assign($page, {
-        $title,
-        $content,
-        $footer,
-        render() {
-            const $el = create(props.content, data, $content);
-            const $bg = create(props.background, data, $background);
-            if ($el)
-                $content.append($el);
-            if ($bg)
-                $background.append($bg);
-            $RenderSimplePage.render = () => { };
-        },
-    });
-    return $RenderSimplePage;
-}
-function Pages({ lazy = 2, Template = SimplePage, } = {}) {
-    const cache = new Map();
-    const history = new Map();
-    let steps = 0;
-    const $container = html `<div class="presenter" tabindex="0" />`;
-    return Object.assign($container, {
-        load(newState, data) {
-            //   console.log('load', cache.has(newState), data);
-            let currentPage;
-            if (cache.has(newState)) {
-                // checks in cache
-                currentPage = cache.get(newState);
-            }
-            else {
-                const props = typeof newState === "object" ? newState : newState(data);
-                currentPage = Template(props, data);
-                cache.set(newState, currentPage);
-            }
-            if (history.size > 0)
-                // replace
-                $container.insertBefore(currentPage, $container.firstChild);
-            else
-                $container.append(currentPage); // append
-            currentPage.render();
-            // add to history
-            steps++;
-            history.set(newState, steps);
-            history.forEach((v, props) => {
-                // delete expired
-                if (v < steps - lazy) {
-                    $container.removeChild(cache.get(props));
-                    history.delete(props);
-                    cache.delete(props);
-                }
-            });
-        },
-        preload(step, newState, data) {
-            if (step > lazy)
-                return false; // do not preload more pages than necessary
-            if (!cache.has(newState)) {
-                // checks in cache
-                const props = typeof newState === "object" ? newState : newState(data);
-                const page = Template(props, data);
-                cache.set(newState, page);
-                $container.append(page);
-                page.render();
-            }
-            history.set(newState, steps); // update ranking in history
-            return true;
-        },
-        // logState() {
-        //   console.log(steps);
-        //   history.forEach(console.log);
-        // },
-    });
-}
-function create(res, ...rest) {
-    if (!res)
-        return null;
-    if (typeof res === "string")
-        return res;
-    if (res instanceof Text)
-        return res;
-    if (res instanceof DocumentFragment)
-        return res;
-    if (res instanceof Element)
-        return res;
-    if (res.node && typeof res.node === "function")
-        return res.node();
-    return create(res(...rest), ...rest);
-}
 
 function focus() {
     this.focus();
@@ -205,13 +78,13 @@ function navigation({ max = 0, previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "
             }
             return nav;
         },
-        bind: ($div) => {
-            $div.addEventListener("pointerup", nav.events.onClick);
-            $div.addEventListener("keydown", nav.events.onKeyDown);
-            $div.addEventListener("contextmenu", preventDefault);
-            $div.addEventListener("mouseenter", focus);
+        bind: (el) => {
+            el.addEventListener("pointerup", nav.events.onClick);
+            el.addEventListener("keydown", nav.events.onKeyDown);
+            el.addEventListener("contextmenu", preventDefault);
+            el.addEventListener("mouseenter", focus);
             // $div.addEventListener('mouseleave', blur)
-            $div.focus();
+            el.focus();
             return nav;
         },
         on(type, listener) {
@@ -238,6 +111,126 @@ function navigation({ max = 0, previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "
         },
     };
     return nav;
+}
+
+const defaultFooter = ({ page, nav }) => {
+    const $number = html `<span>${page}</span>`;
+    const $range = html `<input
+    type="range"
+    value=${page}
+    step="1"
+    min="1"
+    max=${nav.max}
+  />`;
+    const $form = html `<form class="footer-form">
+    ${$range} ${$number}/${nav.max}
+  </form>`;
+    $form.addEventListener("pointerup", (e) => e.stopPropagation());
+    $form.addEventListener("change", (e) => {
+        e.stopPropagation();
+        nav.page($range.valueAsNumber - 1);
+        $range.valueAsNumber = page;
+        $number.innerHTML = "" + page;
+    });
+    $range.addEventListener("input", () => {
+        $number.innerHTML = $range.value;
+    });
+    return $form;
+};
+function SimplePage({ template = "full", ...props }, data) {
+    var _a;
+    const $title = html `<h2 class="page-title">
+    ${create$1(props.title, data)}
+  </h2>`;
+    const $content = html `<div class="page-content"></div>`;
+    const $footer = html `<div class="page-footer">
+    ${create$1(template === "title" ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
+  </div>`;
+    const $background = html `<div class="page-background"></div>`;
+    const $page = html `<div class="presenter-page"
+    />${$background}
+    <div class="page-container">${$title}${$content}${$footer}</div></div>`;
+    $page.classList.toggle("page-centered", template === "title");
+    $content.classList.toggle("page-full", template === "full");
+    const $RenderSimplePage = Object.assign($page, {
+        $title,
+        $content,
+        $footer,
+        render() {
+            const $el = create$1(props.content, data, $content);
+            const $bg = create$1(props.background, data, $background);
+            if ($el)
+                $content.append($el);
+            if ($bg)
+                $background.append($bg);
+            $RenderSimplePage.render = () => { };
+        },
+    });
+    return $RenderSimplePage;
+}
+function Presentation({ lazy = 2, Template = SimplePage, } = {}) {
+    const cache = new Map();
+    const history = new Map();
+    let steps = 0;
+    const $container = html `<div class="presenter" tabindex="0" />`;
+    return Object.assign($container, {
+        load(newState, data) {
+            //   console.log('load', cache.has(newState), data);
+            let currentPage;
+            if (cache.has(newState)) {
+                // checks in cache
+                currentPage = cache.get(newState);
+            }
+            else {
+                const props = typeof newState === "object" ? newState : newState(data);
+                currentPage = Template(props, data);
+                cache.set(newState, currentPage);
+            }
+            if (history.size > 0)
+                // replace
+                $container.insertBefore(currentPage, $container.firstChild);
+            else
+                $container.append(currentPage); // append
+            currentPage.render();
+            // add to history
+            steps++;
+            history.set(newState, steps);
+            history.forEach((v, props) => {
+                // delete expired
+                if (v < steps - lazy) {
+                    $container.removeChild(cache.get(props));
+                    history.delete(props);
+                    cache.delete(props);
+                }
+            });
+        },
+        preload(newState, data) {
+            if (!cache.has(newState)) {
+                // checks in cache
+                const props = typeof newState === "object" ? newState : newState(data);
+                const page = Template(props, data);
+                cache.set(newState, page);
+                $container.append(page);
+                page.render();
+            }
+            history.set(newState, steps); // update ranking in history
+        },
+    });
+}
+function create$1(res, ...rest) {
+    if (!res)
+        return null;
+    if (typeof res === "string")
+        return res;
+    if (res instanceof Text)
+        return res;
+    if (res instanceof DocumentFragment)
+        return res;
+    if (res instanceof Element)
+        return res;
+    if (res.node && typeof res.node === "function")
+        return res.node();
+    return create$1(res(...rest), ...rest);
 }
 
 /**https://github.com/observablehq/stdlib/blob/924d8f801075d29e595eb72fede8d2736f4da550/src/template.js */
@@ -303,7 +296,6 @@ function template(render, wrapper) {
     };
 }
 
-// import 'highlight.js/styles/github.css';
 const options = {
     highlight: function (code, language) {
         return hljs.highlight(code, { language }).value;
@@ -326,7 +318,6 @@ const mdi = template(function (string) {
     return document.createElement("div");
 });
 
-// import 'katex/dist/katex.min.css';
 function render(options) {
     return function (...args) {
         const root = document.createElement("div");
@@ -339,4 +330,19 @@ function createTex() {
 }
 const tex = createTex();
 
-export { Pages, md, mdi, navigation, tex };
+function create(container, pages) {
+    const pres = Presentation({ lazy: 2 });
+    container.append(pres);
+    const nav = navigation({ max: pages.length })
+        .on("page", function (page, _prev, nav) {
+        pres.load(pages[page], { page: page + 1, nav });
+        nav
+            .collect(2)
+            .forEach((v, i) => pres.preload(pages[v], { page: page + 1, nav }));
+    })
+        .bind(pres);
+    nav.first();
+    return { pres, nav };
+}
+
+export { Presentation, create, defaultFooter, md, mdi, navigation, tex };

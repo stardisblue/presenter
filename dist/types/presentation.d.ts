@@ -18,13 +18,13 @@ declare type PageElement = HTMLElement & {
     render: () => void;
 };
 export declare const defaultFooter: ({ page, nav }: PageData) => HTMLFormElement;
-declare type PageState<D> = PageObject | ((data: D) => PageObject);
-export declare function Pages({ lazy, Template, }?: {
+export declare type PageState<D> = PageObject | ((data?: D) => PageObject);
+export declare function Presentation({ lazy, Template, }?: {
     lazy?: number;
-    Template?: (props: PageObject, data: any) => PageElement;
+    Template?: (props: PageObject, data?: any) => PageElement;
 }): HTMLElement & {
-    load<T>(newState: PageState<T>, data: T): void;
-    preload<T_1>(step: number, newState: PageState<T_1>, data: T_1): boolean;
+    load<T>(newState: PageState<T>, data?: T | undefined): void;
+    preload<T_1>(newState: PageState<T_1>, data?: T_1 | undefined): void;
 };
 export {};
-//# sourceMappingURL=pages.d.ts.map
+//# sourceMappingURL=presentation.d.ts.map
