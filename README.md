@@ -46,10 +46,10 @@ Different renderers are available:
 />
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/gh/stardisblue/presenter/dist/index.min.css"
+  href="https://cdn.jsdelivr.net/gh/stardisblue/presenter@latest/dist/index.min.css"
 />
 
-<script src="https://cdn.jsdelivr.net/gh/stardisblue/presenter/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/stardisblue/presenter@latest/dist/index.min.js"></script>
 <script>
   presenter.create(document.querySelector("#container"), [
     {
