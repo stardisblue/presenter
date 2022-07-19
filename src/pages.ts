@@ -1,5 +1,3 @@
-import { selection } from "d3-selection";
-import { transition } from "d3-transition";
 import { html } from "htl";
 import { navigation } from "./navigation";
 
@@ -35,7 +33,7 @@ export const defaultFooter = ({ page, nav }: PageData) => {
     max=${nav.max}
   />`;
 
-  const $form = html<HTMLFormElement>`<form style="font-size: .75em">
+  const $form = html<HTMLFormElement>`<form class="footer-form">
     ${$range} ${$number}/${nav.max}
   </form>`;
 
@@ -58,28 +56,26 @@ function SimplePage<T>(
   { template = "full", ...props }: PageObject,
   data: T
 ): PageElement {
-  const $title = html<HTMLHeadingElement>`<h2 class="measure">
+  const $title = html<HTMLHeadingElement>`<h2 class="page-title">
     ${create(props.title, data)}
   </h2>`;
 
-  const $content = html<HTMLDivElement>`<div></div>`;
-  const $footer = html<HTMLDivElement>`<div class="pt4">
+  const $content = html`<div class="page-content"></div>`;
+  const $footer = html`<div class="page-footer">
     ${create(
       template === "title" ? props.footer : props.footer ?? defaultFooter,
       data
     )}
   </div>`;
 
-  const $background = html<HTMLDivElement>`<div
-    class="absolute"
-    style="inset:0;z-index:-1"
-  ></div>`;
-  const $page = html<HTMLDivElement>`<div class="slides h-100 w-100 flex relative"
-    />${$background}
-    <div class="w-100 flex flex-column">${$title}${$content}${$footer}</div></div>`;
+  const $background = html`<div class="presenter-background"></div>`;
 
-  $page.classList.toggle("items-center", template === "title");
-  $content.classList.toggle("flex-grow-1", template === "full");
+  const $page = html`<div class="presenter-page"
+    />${$background}
+    <div class="page-container">${$title}${$content}${$footer}</div></div>`;
+
+  $page.classList.toggle("page-centered", template === "title");
+  $content.classList.toggle("page-full", template === "full");
 
   const $RenderSimplePage = Object.assign($page, {
     $title,
@@ -110,11 +106,7 @@ export function Pages({
   const history = new Map<PageState<any>, number>();
   let steps = 0;
 
-  const $container = html<HTMLDivElement>`<div
-    class="h-100 w-100 overflow-y-hidden"
-    style="font-size: 3vh"
-    tabindex="0"
-  />`;
+  const $container = html`<div class="presenter" tabindex="0" />`;
 
   return Object.assign($container, {
     load<T>(newState: PageState<T>, data: T) {
@@ -176,8 +168,7 @@ function create<T>(res: any, ...rest: [T, ...any]): null | string | Node {
   if (res instanceof Text) return res;
   if (res instanceof DocumentFragment) return res;
   if (res instanceof Element) return res;
-  if (res instanceof selection || res instanceof transition)
-    return (res as any).node();
+  if (res.node && typeof res.node === "function") return res.node();
 
   return create(res(...rest), ...rest);
 }

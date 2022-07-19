@@ -22,7 +22,7 @@ declare type PageState<D> = PageObject | ((data: D) => PageObject);
 export declare function Pages({ lazy, Template, }?: {
     lazy?: number;
     Template?: (props: PageObject, data: any) => PageElement;
-}): HTMLDivElement & {
+}): HTMLElement & {
     load<T>(newState: PageState<T>, data: T): void;
     preload<T_1>(step: number, newState: PageState<T_1>, data: T_1): boolean;
 };

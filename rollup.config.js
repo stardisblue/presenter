@@ -27,9 +27,9 @@ export default [
       exports: "named",
     },
     plugins: [
+      typescript({ tsconfig: "./tsconfig.json" }), // so Rollup can convert TypeScript to JavaScript
       resolve(), // so Rollup can find dependencies
       commonjs(), // so Rollup can convert dependencies to an ES module
-      typescript({ tsconfig: "./tsconfig.json" }), // so Rollup can convert TypeScript to JavaScript
       terser({ output: { preamble } }), // so Rollup can minify
     ],
   },
@@ -43,8 +43,6 @@ export default [
   {
     input: "src/index.ts",
     external: [
-      "d3-selection",
-      "d3-transition",
       "highlight.js/lib/common",
       "htl",
       "katex",

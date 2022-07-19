@@ -4,18 +4,18 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var htl = require('htl');
-var d3Selection = require('d3-selection');
-var d3Transition = require('d3-transition');
 var keyBy = require('lodash.keyby');
 var range = require('lodash.range');
 var marked = require('marked');
 var hljs = require('highlight.js/lib/common');
+var katex = require('katex');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var keyBy__default = /*#__PURE__*/_interopDefaultLegacy(keyBy);
 var range__default = /*#__PURE__*/_interopDefaultLegacy(range);
 var hljs__default = /*#__PURE__*/_interopDefaultLegacy(hljs);
+var katex__default = /*#__PURE__*/_interopDefaultLegacy(katex);
 
 const defaultFooter = ({ page, nav }) => {
     const $number = htl.html `<span>${page}</span>`;
@@ -26,7 +26,7 @@ const defaultFooter = ({ page, nav }) => {
     min="1"
     max=${nav.max}
   />`;
-    const $form = htl.html `<form style="font-size: .75em">
+    const $form = htl.html `<form class="footer-form">
     ${$range} ${$number}/${nav.max}
   </form>`;
     $form.addEventListener("pointerup", (e) => e.stopPropagation());
@@ -43,22 +43,19 @@ const defaultFooter = ({ page, nav }) => {
 };
 function SimplePage({ template = "full", ...props }, data) {
     var _a;
-    const $title = htl.html `<h2 class="measure">
+    const $title = htl.html `<h2 class="page-title">
     ${create(props.title, data)}
   </h2>`;
-    const $content = htl.html `<div></div>`;
-    const $footer = htl.html `<div class="pt4">
+    const $content = htl.html `<div class="page-content"></div>`;
+    const $footer = htl.html `<div class="page-footer">
     ${create(template === "title" ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
   </div>`;
-    const $background = htl.html `<div
-    class="absolute"
-    style="inset:0;z-index:-1"
-  ></div>`;
-    const $page = htl.html `<div class="slides h-100 w-100 flex relative"
+    const $background = htl.html `<div class="presenter-background"></div>`;
+    const $page = htl.html `<div class="presenter-page"
     />${$background}
-    <div class="w-100 flex flex-column">${$title}${$content}${$footer}</div></div>`;
-    $page.classList.toggle("items-center", template === "title");
-    $content.classList.toggle("flex-grow-1", template === "full");
+    <div class="page-container">${$title}${$content}${$footer}</div></div>`;
+    $page.classList.toggle("page-centered", template === "title");
+    $content.classList.toggle("page-full", template === "full");
     const $RenderSimplePage = Object.assign($page, {
         $title,
         $content,
@@ -79,11 +76,7 @@ function Pages({ lazy = 2, Template = SimplePage, } = {}) {
     const cache = new Map();
     const history = new Map();
     let steps = 0;
-    const $container = htl.html `<div
-    class="h-100 w-100 overflow-y-hidden"
-    style="font-size: 3vh"
-    tabindex="0"
-  />`;
+    const $container = htl.html `<div class="presenter" tabindex="0" />`;
     return Object.assign($container, {
         load(newState, data) {
             //   console.log('load', cache.has(newState), data);
@@ -146,7 +139,7 @@ function create(res, ...rest) {
         return res;
     if (res instanceof Element)
         return res;
-    if (res instanceof d3Selection.selection || res instanceof d3Transition.transition)
+    if (res.node && typeof res.node === "function")
         return res.node();
     return create(res(...rest), ...rest);
 }
@@ -162,13 +155,13 @@ function preventDefault(e) {
     e.preventDefault();
 }
 
-function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'], nextKeys = [
-    'ArrowDown',
-    'ArrowRight',
-    'KeyJ',
-    'KeyL',
-    'KeyS',
-    'KeyD',
+function navigation({ max = 0, previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "KeyK", "KeyW", "KeyA"], nextKeys = [
+    "ArrowDown",
+    "ArrowRight",
+    "KeyJ",
+    "KeyL",
+    "KeyS",
+    "KeyD",
     // 'Space',
 ], stopPropagation = false, } = {}) {
     const keys = {
@@ -223,12 +216,11 @@ function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', '
             return nav;
         },
         bind: ($div) => {
-            d3Selection.select($div)
-                .on('pointerup', nav.events.onClick)
-                .on('keydown', nav.events.onKeyDown)
-                .on('contextmenu', preventDefault) // avoid opening context menu on right click
-                .on('mouseenter', focus);
-            // .on('mouseleave', blur);
+            $div.addEventListener("pointerup", nav.events.onClick);
+            $div.addEventListener("keydown", nav.events.onKeyDown);
+            $div.addEventListener("contextmenu", preventDefault);
+            $div.addEventListener("mouseenter", focus);
+            // $div.addEventListener('mouseleave', blur)
             $div.focus();
             return nav;
         },
@@ -344,6 +336,19 @@ const mdi = template(function (string) {
     return document.createElement("div");
 });
 
+// import 'katex/dist/katex.min.css';
+function render(options) {
+    return function (...args) {
+        const root = document.createElement("div");
+        katex__default["default"].render(String.raw.apply(String, args), root, options);
+        return root.removeChild(root.firstChild);
+    };
+}
+function createTex() {
+    return Object.assign(render(), { block: render({ displayMode: true }) });
+}
+const tex = createTex();
+
 Object.defineProperty(exports, 'html', {
   enumerable: true,
   get: function () { return htl.html; }
@@ -356,3 +361,4 @@ exports.Pages = Pages;
 exports.md = md;
 exports.mdi = mdi;
 exports.navigation = navigation;
+exports.tex = tex;

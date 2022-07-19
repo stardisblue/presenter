@@ -1,9 +1,4 @@
-declare const _default: ((_template: {
-    raw: ArrayLike<string> | readonly string[];
-}, ..._substitutions: any[]) => ChildNode) & {
-    block: (_template: {
-        raw: ArrayLike<string> | readonly string[];
-    }, ..._substitutions: any[]) => ChildNode;
+export declare const tex: ((strings: TemplateStringsArray, ...args: any[]) => Element) & {
+    block: (strings: TemplateStringsArray, ...args: any[]) => Element;
 };
-export default _default;
 //# sourceMappingURL=tex.d.ts.map

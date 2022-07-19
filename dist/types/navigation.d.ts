@@ -13,7 +13,7 @@ export declare function navigation({ max, previousKeys, nextKeys, stopPropagatio
     collect(offset?: number): number[];
     page(goto: number): any;
     bind: ($div: HTMLElement) => any;
-    on(type: 'previous' | 'next' | 'page', listener?: NavigationCallback): any;
+    on(type: "previous" | "next" | "page", listener?: NavigationCallback): any;
     first(): void;
     events: {
         onClick(event: MouseEvent): void;

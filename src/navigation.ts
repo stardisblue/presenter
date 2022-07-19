@@ -1,8 +1,6 @@
- 
-import { select } from 'd3-selection';
-import keyBy from "lodash.keyby"
-import range from 'lodash.range';
-import { focus, preventDefault } from './event-utils';
+import keyBy from "lodash.keyby";
+import range from "lodash.range";
+import { focus, preventDefault } from "./event-utils";
 
 type NavigationOptions = {
   max?: number;
@@ -19,14 +17,14 @@ type NavigationCallback = (
 
 export function navigation({
   max = 0,
-  previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'],
+  previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "KeyK", "KeyW", "KeyA"],
   nextKeys = [
-    'ArrowDown',
-    'ArrowRight',
-    'KeyJ',
-    'KeyL',
-    'KeyS',
-    'KeyD',
+    "ArrowDown",
+    "ArrowRight",
+    "KeyJ",
+    "KeyL",
+    "KeyS",
+    "KeyD",
     // 'Space',
   ],
   stopPropagation = false,
@@ -81,16 +79,16 @@ export function navigation({
       return nav;
     },
     bind: ($div: HTMLElement) => {
-      select($div)
-        .on('pointerup', nav.events.onClick)
-        .on('keydown', nav.events.onKeyDown)
-        .on('contextmenu', preventDefault) // avoid opening context menu on right click
-        .on('mouseenter', focus);
-      // .on('mouseleave', blur);
+      $div.addEventListener("pointerup", nav.events.onClick);
+      $div.addEventListener("keydown", nav.events.onKeyDown);
+      $div.addEventListener("contextmenu", preventDefault);
+      $div.addEventListener("mouseenter", focus);
+      // $div.addEventListener('mouseleave', blur)
+
       $div.focus();
       return nav;
     },
-    on(type: 'previous' | 'next' | 'page', listener?: NavigationCallback) {
+    on(type: "previous" | "next" | "page", listener?: NavigationCallback) {
       listeners[type] = listener;
       return nav;
     },

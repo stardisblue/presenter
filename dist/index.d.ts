@@ -15,7 +15,7 @@ declare function navigation({ max, previousKeys, nextKeys, stopPropagation, }?: 
     collect(offset?: number): number[];
     page(goto: number): any;
     bind: ($div: HTMLElement) => any;
-    on(type: 'previous' | 'next' | 'page', listener?: NavigationCallback): any;
+    on(type: "previous" | "next" | "page", listener?: NavigationCallback): any;
     first(): void;
     events: {
         onClick(event: MouseEvent): void;
@@ -45,7 +45,7 @@ declare type PageState<D> = PageObject | ((data: D) => PageObject);
 declare function Pages({ lazy, Template, }?: {
     lazy?: number;
     Template?: (props: PageObject, data: any) => PageElement;
-}): HTMLDivElement & {
+}): HTMLElement & {
     load<T>(newState: PageState<T>, data: T): void;
     preload<T_1>(step: number, newState: PageState<T_1>, data: T_1): boolean;
 };
@@ -53,4 +53,8 @@ declare function Pages({ lazy, Template, }?: {
 declare const md: (strings: TemplateStringsArray, ..._args: any[]) => Element;
 declare const mdi: (strings: TemplateStringsArray, ..._args: any[]) => Element;
 
-export { Pages, md, mdi, navigation };
+declare const tex: ((strings: TemplateStringsArray, ...args: any[]) => Element) & {
+    block: (strings: TemplateStringsArray, ...args: any[]) => Element;
+};
+
+export { Pages, md, mdi, navigation, tex };
