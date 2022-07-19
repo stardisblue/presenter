@@ -1,10 +1,4 @@
-import { navigation } from "./navigation";
-import { PageData, PageState, Presentation } from "./presentation";
-export { html, svg } from "htl";
-export { defaultFooter } from "./presentation";
-export { navigation, Presentation };
-export { md, mdi } from "./md";
-export { tex } from "./tex";
+import type { PageData, PageState } from './presentation';
 export declare function create(container: HTMLElement, pages: PageState<PageData>[]): {
     pres: HTMLElement & {
         load<T>(newState: PageState<T>, data?: T | undefined): void;
@@ -18,7 +12,7 @@ export declare function create(container: HTMLElement, pages: PageState<PageData
         collect(offset?: number): number[];
         page(goto: number): any;
         bind: (el: HTMLElement) => any;
-        on(type: "previous" | "next" | "page", listener?: ((page: number, previous: number, nav: any) => void) | undefined): any;
+        on(type: "previous" | "next" | "page", listener?: import("./navigation").NavigationCallback | undefined): any;
         first(): void;
         events: {
             onClick(event: MouseEvent): void;
@@ -26,4 +20,4 @@ export declare function create(container: HTMLElement, pages: PageState<PageData
         };
     };
 };
-//# sourceMappingURL=index.d.ts.map
+//# sourceMappingURL=create.d.ts.map

@@ -1,15 +1,15 @@
-import keyBy from "lodash.keyby";
-import range from "lodash.range";
-import { focus, preventDefault } from "./event-utils";
+import keyBy from 'lodash.keyby';
+import range from 'lodash.range';
+import { focus, preventDefault } from './event-utils';
 
-type NavigationOptions = {
+export type NavigationOptions = {
   max?: number;
   previousKeys?: string[];
   nextKeys?: string[];
   stopPropagation?: boolean;
 };
 
-type NavigationCallback = (
+export type NavigationCallback = (
   page: number,
   previous: number,
   nav: ReturnType<typeof navigation>
@@ -17,14 +17,14 @@ type NavigationCallback = (
 
 export function navigation({
   max = 0,
-  previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "KeyK", "KeyW", "KeyA"],
+  previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'],
   nextKeys = [
-    "ArrowDown",
-    "ArrowRight",
-    "KeyJ",
-    "KeyL",
-    "KeyS",
-    "KeyD",
+    'ArrowDown',
+    'ArrowRight',
+    'KeyJ',
+    'KeyL',
+    'KeyS',
+    'KeyD',
     // 'Space',
   ],
   stopPropagation = false,
@@ -79,16 +79,16 @@ export function navigation({
       return nav;
     },
     bind: (el: HTMLElement) => {
-      el.addEventListener("pointerup", nav.events.onClick);
-      el.addEventListener("keydown", nav.events.onKeyDown);
-      el.addEventListener("contextmenu", preventDefault);
-      el.addEventListener("mouseenter", focus);
+      el.addEventListener('pointerup', nav.events.onClick);
+      el.addEventListener('keydown', nav.events.onKeyDown);
+      el.addEventListener('contextmenu', preventDefault);
+      el.addEventListener('mouseenter', focus);
       // $div.addEventListener('mouseleave', blur)
 
       el.focus();
       return nav;
     },
-    on(type: "previous" | "next" | "page", listener?: NavigationCallback) {
+    on(type: 'previous' | 'next' | 'page', listener?: NavigationCallback) {
       listeners[type] = listener;
       return nav;
     },

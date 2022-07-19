@@ -1,21 +1,10 @@
 // https://github.com/stardisblue/presenter v1.0.0 Copyright (c) 2021 Fati CHEN
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var keyBy = require('lodash.keyby');
-var range = require('lodash.range');
-var htl = require('htl');
-var marked = require('marked');
-var hljs = require('highlight.js/lib/common');
-var katex = require('katex');
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var keyBy__default = /*#__PURE__*/_interopDefaultLegacy(keyBy);
-var range__default = /*#__PURE__*/_interopDefaultLegacy(range);
-var hljs__default = /*#__PURE__*/_interopDefaultLegacy(hljs);
-var katex__default = /*#__PURE__*/_interopDefaultLegacy(katex);
+import keyBy from 'lodash.keyby';
+import range from 'lodash.range';
+import { html, svg } from 'htl';
+import { marked } from 'marked';
+import hljs from 'highlight.js/lib/common';
+import Katex from 'katex';
 
 function focus() {
     this.focus();
@@ -28,18 +17,18 @@ function preventDefault(e) {
     e.preventDefault();
 }
 
-function navigation({ max = 0, previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "KeyK", "KeyW", "KeyA"], nextKeys = [
-    "ArrowDown",
-    "ArrowRight",
-    "KeyJ",
-    "KeyL",
-    "KeyS",
-    "KeyD",
+function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'], nextKeys = [
+    'ArrowDown',
+    'ArrowRight',
+    'KeyJ',
+    'KeyL',
+    'KeyS',
+    'KeyD',
     // 'Space',
 ], stopPropagation = false, } = {}) {
     const keys = {
-        previous: keyBy__default["default"](previousKeys),
-        next: keyBy__default["default"](nextKeys),
+        previous: keyBy(previousKeys),
+        next: keyBy(nextKeys),
     };
     const listeners = {
         previous: undefined,
@@ -77,7 +66,7 @@ function navigation({ max = 0, previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "
         },
         collect(offset = 1) {
             const bounded = Math.max(Math.min(offset + nav.current, max - 1), 0);
-            return range__default["default"](nav.current + 1, bounded + 1, Math.sign(offset));
+            return range(nav.current + 1, bounded + 1, Math.sign(offset));
         },
         page(goto) {
             if (goto !== nav.current) {
@@ -89,10 +78,10 @@ function navigation({ max = 0, previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "
             return nav;
         },
         bind: (el) => {
-            el.addEventListener("pointerup", nav.events.onClick);
-            el.addEventListener("keydown", nav.events.onKeyDown);
-            el.addEventListener("contextmenu", preventDefault);
-            el.addEventListener("mouseenter", focus);
+            el.addEventListener('pointerup', nav.events.onClick);
+            el.addEventListener('keydown', nav.events.onKeyDown);
+            el.addEventListener('contextmenu', preventDefault);
+            el.addEventListener('mouseenter', focus);
             // $div.addEventListener('mouseleave', blur)
             el.focus();
             return nav;
@@ -124,44 +113,44 @@ function navigation({ max = 0, previousKeys = ["ArrowUp", "ArrowLeft", "KeyH", "
 }
 
 const defaultFooter = ({ page, nav }) => {
-    const $number = htl.html `<span>${page}</span>`;
-    const $range = htl.html `<input
+    const $number = html `<span>${page}</span>`;
+    const $range = html `<input
     type="range"
     value=${page}
     step="1"
     min="1"
     max=${nav.max}
   />`;
-    const $form = htl.html `<form class="footer-form">
+    const $form = html `<form class="footer-form">
     ${$range} ${$number}/${nav.max}
   </form>`;
-    $form.addEventListener("pointerup", (e) => e.stopPropagation());
-    $form.addEventListener("change", (e) => {
+    $form.addEventListener('pointerup', (e) => e.stopPropagation());
+    $form.addEventListener('change', (e) => {
         e.stopPropagation();
         nav.page($range.valueAsNumber - 1);
         $range.valueAsNumber = page;
-        $number.innerHTML = "" + page;
+        $number.innerHTML = '' + page;
     });
-    $range.addEventListener("input", () => {
+    $range.addEventListener('input', () => {
         $number.innerHTML = $range.value;
     });
     return $form;
 };
-function SimplePage({ template = "full", ...props }, data) {
+function SimplePage({ template = 'full', ...props }, data) {
     var _a;
-    const $title = htl.html `<h2 class="page-title">
+    const $title = html `<h2 class="page-title">
     ${create$1(props.title, data)}
   </h2>`;
-    const $content = htl.html `<div class="page-content"></div>`;
-    const $footer = htl.html `<div class="page-footer">
-    ${create$1(template === "title" ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
+    const $content = html `<div class="page-content"></div>`;
+    const $footer = html `<div class="page-footer">
+    ${create$1(template === 'title' ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
   </div>`;
-    const $background = htl.html `<div class="page-background"></div>`;
-    const $page = htl.html `<div class="presenter-page"
+    const $background = html `<div class="page-background"></div>`;
+    const $page = html `<div class="presenter-page"
     />${$background}
     <div class="page-container">${$title}${$content}${$footer}</div></div>`;
-    $page.classList.toggle("page-centered", template === "title");
-    $content.classList.toggle("page-full", template === "full");
+    $page.classList.toggle('page-centered', template === 'title');
+    $content.classList.toggle('page-full', template === 'full');
     const $RenderSimplePage = Object.assign($page, {
         $title,
         $content,
@@ -182,7 +171,7 @@ function Presentation({ lazy = 2, Template = SimplePage, } = {}) {
     const cache = new Map();
     const history = new Map();
     let steps = 0;
-    const $container = htl.html `<div class="presenter" tabindex="0" />`;
+    const $container = html `<div class="presenter" tabindex="0" />`;
     return Object.assign($container, {
         load(newState, data) {
             //   console.log('load', cache.has(newState), data);
@@ -192,7 +181,7 @@ function Presentation({ lazy = 2, Template = SimplePage, } = {}) {
                 currentPage = cache.get(newState);
             }
             else {
-                const props = typeof newState === "object" ? newState : newState(data);
+                const props = typeof newState === 'object' ? newState : newState(data);
                 currentPage = Template(props, data);
                 cache.set(newState, currentPage);
             }
@@ -217,7 +206,7 @@ function Presentation({ lazy = 2, Template = SimplePage, } = {}) {
         preload(newState, data) {
             if (!cache.has(newState)) {
                 // checks in cache
-                const props = typeof newState === "object" ? newState : newState(data);
+                const props = typeof newState === 'object' ? newState : newState(data);
                 const page = Template(props, data);
                 cache.set(newState, page);
                 $container.append(page);
@@ -230,7 +219,7 @@ function Presentation({ lazy = 2, Template = SimplePage, } = {}) {
 function create$1(res, ...rest) {
     if (!res)
         return null;
-    if (typeof res === "string")
+    if (typeof res === 'string')
         return res;
     if (res instanceof Text)
         return res;
@@ -238,10 +227,29 @@ function create$1(res, ...rest) {
         return res;
     if (res instanceof Element)
         return res;
-    if (res.node && typeof res.node === "function")
+    if (res.node && typeof res.node === 'function')
         return res.node();
     return create$1(res(...rest), ...rest);
 }
+
+function create(container, pages) {
+    const pres = Presentation({ lazy: 2 });
+    container.append(pres);
+    const nav = navigation({ max: pages.length })
+        .on('page', function (page, _prev, nav) {
+        pres.load(pages[page], { page: page + 1, nav });
+        nav
+            .collect(2)
+            .forEach((v, i) => pres.preload(pages[v], { page: page + 1, nav }));
+    })
+        .bind(pres);
+    nav.first();
+    return { pres, nav };
+}
+
+const stub$1 = html;
+
+const stub = svg;
 
 /**https://github.com/observablehq/stdlib/blob/924d8f801075d29e595eb72fede8d2736f4da550/src/template.js */
 function template(render, wrapper) {
@@ -306,67 +314,42 @@ function template(render, wrapper) {
     };
 }
 
+// import 'highlight.js/styles/github.css';
 const options = {
     highlight: function (code, language) {
-        return hljs__default["default"].highlight(code, { language }).value;
+        return hljs.highlight(code, { language }).value;
     },
-    langPrefix: "hljs language-",
+    langPrefix: 'hljs language-',
 };
-marked.marked.setOptions(options);
+marked.setOptions(options);
 const md = template(function (string) {
-    const root = document.createElement("div");
-    root.innerHTML = marked.marked.parse(string).trim();
+    const root = document.createElement('div');
+    root.innerHTML = marked.parse(string).trim();
     return root;
 }, function () {
-    return document.createElement("div");
+    return document.createElement('div');
 });
 const mdi = template(function (string) {
-    const root = document.createElement("div");
-    root.innerHTML = marked.marked.parseInline(string).trim();
+    const root = document.createElement('div');
+    root.innerHTML = marked.parseInline(string).trim();
     return root;
 }, function () {
-    return document.createElement("div");
+    return document.createElement('div');
 });
 
-function render(options) {
+// import 'katex/dist/katex.min.css';
+function render(katex, options) {
     return function (...args) {
-        const root = document.createElement("div");
-        katex__default["default"].render(String.raw.apply(String, args), root, options);
+        const root = document.createElement('div');
+        katex.render(String.raw.apply(String, args), root, options);
         return root.removeChild(root.firstChild);
     };
 }
-function createTex() {
-    return Object.assign(render(), { block: render({ displayMode: true }) });
+function createTex(katex) {
+    return Object.assign(render(katex), {
+        block: render(katex, { displayMode: true }),
+    });
 }
-const tex = createTex();
+const tex = createTex(Katex);
 
-function create(container, pages) {
-    const pres = Presentation({ lazy: 2 });
-    container.append(pres);
-    const nav = navigation({ max: pages.length })
-        .on("page", function (page, _prev, nav) {
-        pres.load(pages[page], { page: page + 1, nav });
-        nav
-            .collect(2)
-            .forEach((v, i) => pres.preload(pages[v], { page: page + 1, nav }));
-    })
-        .bind(pres);
-    nav.first();
-    return { pres, nav };
-}
-
-Object.defineProperty(exports, 'html', {
-    enumerable: true,
-    get: function () { return htl.html; }
-});
-Object.defineProperty(exports, 'svg', {
-    enumerable: true,
-    get: function () { return htl.svg; }
-});
-exports.Presentation = Presentation;
-exports.create = create;
-exports.defaultFooter = defaultFooter;
-exports.md = md;
-exports.mdi = mdi;
-exports.navigation = navigation;
-exports.tex = tex;
+export { Presentation, create, defaultFooter, stub$1 as html, md, mdi, navigation, stub as svg, tex };

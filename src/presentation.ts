@@ -1,5 +1,5 @@
-import { html } from "htl";
-import { navigation } from "./navigation";
+import { html } from 'htl';
+import type { navigation } from './navigation';
 
 export type PageData = { page: number; nav: ReturnType<typeof navigation> };
 
@@ -9,7 +9,7 @@ type PageProp =
   | ((data: PageData, $holder: HTMLDivElement) => string | Element | void)
   | undefined;
 export type PageObject = {
-  template?: "title" | "full";
+  template?: 'title' | 'full';
   content?: PageProp;
   footer?: PageProp;
   background?: PageProp;
@@ -37,15 +37,15 @@ export const defaultFooter = ({ page, nav }: PageData) => {
     ${$range} ${$number}/${nav.max}
   </form>`;
 
-  $form.addEventListener("pointerup", (e) => e.stopPropagation());
-  $form.addEventListener("change", (e) => {
+  $form.addEventListener('pointerup', (e) => e.stopPropagation());
+  $form.addEventListener('change', (e) => {
     e.stopPropagation();
     nav.page($range.valueAsNumber - 1);
     $range.valueAsNumber = page;
-    $number.innerHTML = "" + page;
+    $number.innerHTML = '' + page;
   });
 
-  $range.addEventListener("input", () => {
+  $range.addEventListener('input', () => {
     $number.innerHTML = $range.value;
   });
 
@@ -53,7 +53,7 @@ export const defaultFooter = ({ page, nav }: PageData) => {
 };
 
 function SimplePage<T>(
-  { template = "full", ...props }: PageObject,
+  { template = 'full', ...props }: PageObject,
   data?: T
 ): PageElement {
   const $title = html<HTMLHeadingElement>`<h2 class="page-title">
@@ -63,7 +63,7 @@ function SimplePage<T>(
   const $content = html`<div class="page-content"></div>`;
   const $footer = html`<div class="page-footer">
     ${create(
-      template === "title" ? props.footer : props.footer ?? defaultFooter,
+      template === 'title' ? props.footer : props.footer ?? defaultFooter,
       data
     )}
   </div>`;
@@ -74,8 +74,8 @@ function SimplePage<T>(
     />${$background}
     <div class="page-container">${$title}${$content}${$footer}</div></div>`;
 
-  $page.classList.toggle("page-centered", template === "title");
-  $content.classList.toggle("page-full", template === "full");
+  $page.classList.toggle('page-centered', template === 'title');
+  $content.classList.toggle('page-full', template === 'full');
 
   const $RenderSimplePage = Object.assign($page, {
     $title,
@@ -116,7 +116,7 @@ export function Presentation({
         // checks in cache
         currentPage = cache.get(newState)!;
       } else {
-        const props = typeof newState === "object" ? newState : newState(data);
+        const props = typeof newState === 'object' ? newState : newState(data);
         currentPage = Template(props, data);
         cache.set(newState, currentPage);
       }
@@ -142,7 +142,7 @@ export function Presentation({
     preload<T>(newState: PageState<T>, data?: T) {
       if (!cache.has(newState)) {
         // checks in cache
-        const props = typeof newState === "object" ? newState : newState(data);
+        const props = typeof newState === 'object' ? newState : newState(data);
         const page = Template(props, data);
         cache.set(newState, page);
         $container.append(page);
@@ -156,11 +156,11 @@ export function Presentation({
 
 function create<T>(res: any, ...rest: [T, ...any]): null | string | Node {
   if (!res) return null;
-  if (typeof res === "string") return res;
+  if (typeof res === 'string') return res;
   if (res instanceof Text) return res;
   if (res instanceof DocumentFragment) return res;
   if (res instanceof Element) return res;
-  if (res.node && typeof res.node === "function") return res.node();
+  if (res.node && typeof res.node === 'function') return res.node();
 
   return create(res(...rest), ...rest);
 }

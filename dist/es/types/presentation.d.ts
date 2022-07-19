@@ -1,11 +1,11 @@
-import { navigation } from "./navigation";
+import type { navigation } from './navigation';
 export declare type PageData = {
     page: number;
     nav: ReturnType<typeof navigation>;
 };
 declare type PageProp = string | Element | ((data: PageData, $holder: HTMLDivElement) => string | Element | void) | undefined;
 export declare type PageObject = {
-    template?: "title" | "full";
+    template?: 'title' | 'full';
     content?: PageProp;
     footer?: PageProp;
     background?: PageProp;

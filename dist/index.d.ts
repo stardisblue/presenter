@@ -1,5 +1,3 @@
-export { html, svg } from 'htl';
-
 declare type NavigationOptions = {
     max?: number;
     previousKeys?: string[];
@@ -15,7 +13,7 @@ declare function navigation({ max, previousKeys, nextKeys, stopPropagation, }?: 
     collect(offset?: number): number[];
     page(goto: number): any;
     bind: (el: HTMLElement) => any;
-    on(type: "previous" | "next" | "page", listener?: NavigationCallback): any;
+    on(type: 'previous' | 'next' | 'page', listener?: NavigationCallback): any;
     first(): void;
     events: {
         onClick(event: MouseEvent): void;
@@ -29,7 +27,7 @@ declare type PageData = {
 };
 declare type PageProp = string | Element | ((data: PageData, $holder: HTMLDivElement) => string | Element | void) | undefined;
 declare type PageObject = {
-    template?: "title" | "full";
+    template?: 'title' | 'full';
     content?: PageProp;
     footer?: PageProp;
     background?: PageProp;
@@ -51,13 +49,6 @@ declare function Presentation({ lazy, Template, }?: {
     preload<T_1>(newState: PageState<T_1>, data?: T_1 | undefined): void;
 };
 
-declare const md: (strings: TemplateStringsArray, ..._args: any[]) => Element;
-declare const mdi: (strings: TemplateStringsArray, ..._args: any[]) => Element;
-
-declare const tex: ((strings: TemplateStringsArray, ...args: any[]) => Element) & {
-    block: (strings: TemplateStringsArray, ...args: any[]) => Element;
-};
-
 declare function create(container: HTMLElement, pages: PageState<PageData>[]): {
     pres: HTMLElement & {
         load<T>(newState: PageState<T>, data?: T | undefined): void;
@@ -71,7 +62,7 @@ declare function create(container: HTMLElement, pages: PageState<PageData>[]): {
         collect(offset?: number): number[];
         page(goto: number): any;
         bind: (el: HTMLElement) => any;
-        on(type: "previous" | "next" | "page", listener?: ((page: number, previous: number, nav: any) => void) | undefined): any;
+        on(type: "previous" | "next" | "page", listener?: NavigationCallback | undefined): any;
         first(): void;
         events: {
             onClick(event: MouseEvent): void;
@@ -80,4 +71,24 @@ declare function create(container: HTMLElement, pages: PageState<PageData>[]): {
     };
 };
 
-export { Presentation, create, defaultFooter, md, mdi, navigation, tex };
+interface HTMLType {
+    <T extends HTMLElement = HTMLElement>(strings: TemplateStringsArray, ...args: any[]): T;
+    fragment<T extends HTMLElement = HTMLElement>(arr: TemplateStringsArray, ...args: any[]): T;
+}
+declare const stub$1: HTMLType;
+//# sourceMappingURL=html.d.ts.map
+
+interface SVGType {
+    <T extends SVGElement = SVGElement>(arr: TemplateStringsArray, ...args: any[]): T;
+}
+declare const stub: SVGType;
+//# sourceMappingURL=svg.d.ts.map
+
+declare const md: (strings: TemplateStringsArray, ..._args: any[]) => Element;
+declare const mdi: (strings: TemplateStringsArray, ..._args: any[]) => Element;
+
+declare const tex: ((strings: TemplateStringsArray, ...args: any[]) => Element) & {
+    block: (strings: TemplateStringsArray, ...args: any[]) => Element;
+};
+
+export { NavigationCallback, NavigationOptions, PageData, PageObject, PageState, Presentation, create, defaultFooter, stub$1 as html, md, mdi, navigation, stub as svg, tex };
