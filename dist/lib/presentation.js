@@ -1,4 +1,4 @@
-// https://github.com/stardisblue/presenter v1.0.0 Copyright (c) 2021 Fati CHEN
+// https://github.com/stardisblue/presenter v0.1.1 Copyright (c) 2021 Fati CHEN
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
