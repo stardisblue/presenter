@@ -57,12 +57,12 @@ function SimplePage<T>(
   data?: T
 ): PageElement {
   const $title = html<HTMLHeadingElement>`<h2 class="page-title">
-    ${create(props.title, data)}
+    ${resolve(props.title, data)}
   </h2>`;
 
   const $content = html`<div class="page-content"></div>`;
   const $footer = html`<div class="page-footer">
-    ${create(
+    ${resolve(
       template === 'title' ? props.footer : props.footer ?? defaultFooter,
       data
     )}
@@ -82,8 +82,8 @@ function SimplePage<T>(
     $content,
     $footer,
     render() {
-      const $el = create(props.content, data, $content);
-      const $bg = create(props.background, data, $background);
+      const $el = resolve(props.content, data, $content);
+      const $bg = resolve(props.background, data, $background);
       if ($el) $content.append($el);
       if ($bg) $background.append($bg);
       $RenderSimplePage.render = () => {};
@@ -154,7 +154,10 @@ export function Presentation({
   });
 }
 
-function create<T>(res: any, ...rest: [T, ...any]): null | string | Node {
+export function resolve<T>(
+  res: any,
+  ...rest: [T, ...any]
+): null | string | Node {
   if (!res) return null;
   if (typeof res === 'string') return res;
   if (res instanceof Text) return res;
@@ -162,5 +165,5 @@ function create<T>(res: any, ...rest: [T, ...any]): null | string | Node {
   if (res instanceof Element) return res;
   if (res.node && typeof res.node === 'function') return res.node();
 
-  return create(res(...rest), ...rest);
+  return resolve(res(...rest), ...rest);
 }

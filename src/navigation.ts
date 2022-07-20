@@ -1,4 +1,4 @@
-import { index, range } from 'd3-array';
+import { range } from 'd3-array';
 import { focus, preventDefault } from './event-utils';
 
 export type NavigationOptions = {
@@ -17,15 +17,7 @@ export type NavigationCallback = (
 export function navigation({
   max = 0,
   previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'],
-  nextKeys = [
-    'ArrowDown',
-    'ArrowRight',
-    'KeyJ',
-    'KeyL',
-    'KeyS',
-    'KeyD',
-    // 'Space',
-  ],
+  nextKeys = ['ArrowDown', 'ArrowRight', 'KeyJ', 'KeyL', 'KeyS', 'KeyD'],
   stopPropagation = false,
 }: NavigationOptions = {}) {
   const keys = {
