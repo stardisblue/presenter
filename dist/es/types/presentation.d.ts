@@ -26,5 +26,6 @@ export declare function Presentation({ lazy, Template, }?: {
     load<T>(newState: PageState<T>, data?: T | undefined): void;
     preload<T_1>(newState: PageState<T_1>, data?: T_1 | undefined): void;
 };
+export declare function resolve<T>(res: any, ...rest: [T, ...any]): null | string | Node;
 export {};
 //# sourceMappingURL=presentation.d.ts.map

@@ -1,4 +1,4 @@
-// https://github.com/stardisblue/presenter v0.1.1 Copyright (c) 2021 Fati CHEN
+// https://github.com/stardisblue/presenter v0.1.2 Copyright (c) 2021 Fati CHEN
 import { range } from 'd3-array';
 
 function focus() {
@@ -12,15 +12,7 @@ function preventDefault(e) {
     e.preventDefault();
 }
 
-function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'], nextKeys = [
-    'ArrowDown',
-    'ArrowRight',
-    'KeyJ',
-    'KeyL',
-    'KeyS',
-    'KeyD',
-    // 'Space',
-], stopPropagation = false, } = {}) {
+function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'], nextKeys = ['ArrowDown', 'ArrowRight', 'KeyJ', 'KeyL', 'KeyS', 'KeyD'], stopPropagation = false, } = {}) {
     const keys = {
         previous: new Set(previousKeys),
         next: new Set(nextKeys),

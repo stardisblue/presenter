@@ -1,6 +1,6 @@
 {
   "name": "presenter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "a simple but deadly js presentation toolkit",
   "homepage": "https://github.com/stardisblue/presenter",
   "main": "dist/lib/index.js",

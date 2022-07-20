@@ -1,3 +1,5 @@
+import Katex from 'katex';
+
 declare type NavigationOptions = {
     max?: number;
     previousKeys?: string[];
@@ -48,6 +50,7 @@ declare function Presentation({ lazy, Template, }?: {
     load<T>(newState: PageState<T>, data?: T | undefined): void;
     preload<T_1>(newState: PageState<T_1>, data?: T_1 | undefined): void;
 };
+declare function resolve<T>(res: any, ...rest: [T, ...any]): null | string | Node;
 
 declare function create(container: HTMLElement, pages: PageState<PageData>[]): {
     pres: HTMLElement & {
@@ -87,8 +90,11 @@ declare const stub: SVGType;
 declare const md: (strings: TemplateStringsArray, ..._args: any[]) => Element;
 declare const mdi: (strings: TemplateStringsArray, ..._args: any[]) => Element;
 
+declare function createTex(katex: typeof Katex): ((strings: TemplateStringsArray, ...args: any[]) => Element) & {
+    block: (strings: TemplateStringsArray, ...args: any[]) => Element;
+};
 declare const tex: ((strings: TemplateStringsArray, ...args: any[]) => Element) & {
     block: (strings: TemplateStringsArray, ...args: any[]) => Element;
 };
 
-export { NavigationCallback, NavigationOptions, PageData, PageObject, PageState, Presentation, create, defaultFooter, stub$1 as html, md, mdi, navigation, stub as svg, tex };
+export { NavigationCallback, NavigationOptions, PageData, PageObject, PageState, Presentation, create, createTex, defaultFooter, stub$1 as html, md, mdi, navigation, resolve, stub as svg, tex };

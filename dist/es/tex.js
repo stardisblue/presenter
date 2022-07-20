@@ -1,4 +1,4 @@
-// https://github.com/stardisblue/presenter v0.1.1 Copyright (c) 2021 Fati CHEN
+// https://github.com/stardisblue/presenter v0.1.2 Copyright (c) 2021 Fati CHEN
 import Katex from 'katex';
 
 // import 'katex/dist/katex.min.css';

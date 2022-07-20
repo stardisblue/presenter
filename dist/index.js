@@ -102,15 +102,7 @@
       e.preventDefault();
   }
 
-  function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'], nextKeys = [
-      'ArrowDown',
-      'ArrowRight',
-      'KeyJ',
-      'KeyL',
-      'KeyS',
-      'KeyD',
-      // 'Space',
-  ], stopPropagation = false, } = {}) {
+  function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', 'KeyK', 'KeyW', 'KeyA'], nextKeys = ['ArrowDown', 'ArrowRight', 'KeyJ', 'KeyL', 'KeyS', 'KeyD'], stopPropagation = false, } = {}) {
       const keys = {
           previous: new Set(previousKeys),
           next: new Set(nextKeys),
@@ -889,11 +881,11 @@
   function SimplePage({ template = 'full', ...props }, data) {
       var _a;
       const $title = html `<h2 class="page-title">
-    ${create$1(props.title, data)}
+    ${resolve(props.title, data)}
   </h2>`;
       const $content = html `<div class="page-content"></div>`;
       const $footer = html `<div class="page-footer">
-    ${create$1(template === 'title' ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
+    ${resolve(template === 'title' ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
   </div>`;
       const $background = html `<div class="page-background"></div>`;
       const $page = html `<div class="presenter-page"
@@ -906,8 +898,8 @@
           $content,
           $footer,
           render() {
-              const $el = create$1(props.content, data, $content);
-              const $bg = create$1(props.background, data, $background);
+              const $el = resolve(props.content, data, $content);
+              const $bg = resolve(props.background, data, $background);
               if ($el)
                   $content.append($el);
               if ($bg)
@@ -966,7 +958,7 @@
           },
       });
   }
-  function create$1(res, ...rest) {
+  function resolve(res, ...rest) {
       if (!res)
           return null;
       if (typeof res === 'string')
@@ -979,7 +971,7 @@
           return res;
       if (res.node && typeof res.node === 'function')
           return res.node();
-      return create$1(res(...rest), ...rest);
+      return resolve(res(...rest), ...rest);
   }
 
   function create(container, pages) {
@@ -18864,7 +18856,14 @@
   hljs.default = hljs;
   var common = hljs;
 
-  /**https://github.com/observablehq/stdlib/blob/924d8f801075d29e595eb72fede8d2736f4da550/src/template.js */
+  /**
+   * Copyright 2018-2021 Observable, Inc.
+   *
+   * Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+   *
+   * https://github.com/observablehq/stdlib/blob/924d8f801075d29e595eb72fede8d2736f4da550/src/template.js */
   function template(render, wrapper) {
       return function (strings, ..._args) {
           var string = strings[0], parts = [], part, root = null, node, nodes, walker, i, n, j, m, k = -1;
@@ -37224,11 +37223,13 @@
 
   exports.Presentation = Presentation;
   exports.create = create;
+  exports.createTex = createTex;
   exports.defaultFooter = defaultFooter;
   exports.html = stub$1;
   exports.md = md;
   exports.mdi = mdi;
   exports.navigation = navigation;
+  exports.resolve = resolve;
   exports.svg = stub;
   exports.tex = tex;
 

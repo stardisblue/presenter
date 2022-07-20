@@ -1,4 +1,4 @@
-// https://github.com/stardisblue/presenter v0.1.1 Copyright (c) 2021 Fati CHEN
+// https://github.com/stardisblue/presenter v0.1.2 Copyright (c) 2021 Fati CHEN
 import { html } from 'htl';
 
 const defaultFooter = ({ page, nav }) => {
@@ -28,11 +28,11 @@ const defaultFooter = ({ page, nav }) => {
 function SimplePage({ template = 'full', ...props }, data) {
     var _a;
     const $title = html `<h2 class="page-title">
-    ${create(props.title, data)}
+    ${resolve(props.title, data)}
   </h2>`;
     const $content = html `<div class="page-content"></div>`;
     const $footer = html `<div class="page-footer">
-    ${create(template === 'title' ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
+    ${resolve(template === 'title' ? props.footer : (_a = props.footer) !== null && _a !== void 0 ? _a : defaultFooter, data)}
   </div>`;
     const $background = html `<div class="page-background"></div>`;
     const $page = html `<div class="presenter-page"
@@ -45,8 +45,8 @@ function SimplePage({ template = 'full', ...props }, data) {
         $content,
         $footer,
         render() {
-            const $el = create(props.content, data, $content);
-            const $bg = create(props.background, data, $background);
+            const $el = resolve(props.content, data, $content);
+            const $bg = resolve(props.background, data, $background);
             if ($el)
                 $content.append($el);
             if ($bg)
@@ -105,7 +105,7 @@ function Presentation({ lazy = 2, Template = SimplePage, } = {}) {
         },
     });
 }
-function create(res, ...rest) {
+function resolve(res, ...rest) {
     if (!res)
         return null;
     if (typeof res === 'string')
@@ -118,7 +118,7 @@ function create(res, ...rest) {
         return res;
     if (res.node && typeof res.node === 'function')
         return res.node();
-    return create(res(...rest), ...rest);
+    return resolve(res(...rest), ...rest);
 }
 
-export { Presentation, defaultFooter };
+export { Presentation, defaultFooter, resolve };
