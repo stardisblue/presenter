@@ -1,5 +1,4 @@
-import keyBy from 'lodash.keyby';
-import range from 'lodash.range';
+import { index, range } from 'd3-array';
 import { focus, preventDefault } from './event-utils';
 
 export type NavigationOptions = {
@@ -30,8 +29,8 @@ export function navigation({
   stopPropagation = false,
 }: NavigationOptions = {}) {
   const keys = {
-    previous: keyBy(previousKeys),
-    next: keyBy(nextKeys),
+    previous: new Set(previousKeys),
+    next: new Set(nextKeys),
   };
   const listeners: {
     previous: NavigationCallback | undefined;
@@ -101,8 +100,8 @@ export function navigation({
         else if (event.button === 0) nav.nextPage(event);
       },
       onKeyDown(event: KeyboardEvent) {
-        if (event.code in keys.previous) nav.previousPage(event);
-        else if (event.code in keys.next) nav.nextPage(event);
+        if (keys.previous.has(event.code)) nav.previousPage(event);
+        else if (keys.next.has(event.code)) nav.nextPage(event);
       },
     },
   };

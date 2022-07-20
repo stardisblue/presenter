@@ -1,6 +1,5 @@
 // https://github.com/stardisblue/presenter v1.0.0 Copyright (c) 2021 Fati CHEN
-import keyBy from 'lodash.keyby';
-import range from 'lodash.range';
+import { range } from 'd3-array';
 import { html, svg } from 'htl';
 import { marked } from 'marked';
 import hljs from 'highlight.js/lib/common';
@@ -27,8 +26,8 @@ function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', '
     // 'Space',
 ], stopPropagation = false, } = {}) {
     const keys = {
-        previous: keyBy(previousKeys),
-        next: keyBy(nextKeys),
+        previous: new Set(previousKeys),
+        next: new Set(nextKeys),
     };
     const listeners = {
         previous: undefined,
@@ -102,9 +101,9 @@ function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', '
                     nav.nextPage(event);
             },
             onKeyDown(event) {
-                if (event.code in keys.previous)
+                if (keys.previous.has(event.code))
                     nav.previousPage(event);
-                else if (event.code in keys.next)
+                else if (keys.next.has(event.code))
                     nav.nextPage(event);
             },
         },

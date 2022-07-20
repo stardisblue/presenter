@@ -44,14 +44,7 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.ts',
-    external: [
-      'highlight.js/lib/common',
-      'htl',
-      'katex',
-      'lodash.keyby',
-      'lodash.range',
-      'marked',
-    ],
+    external: ['highlight.js/lib/common', 'htl', 'katex', 'd3-array', 'marked'],
     plugins: [
       typescript({ tsconfig: './tsconfig.json' }), // so Rollup can convert TypeScript to JavaScript
     ],
@@ -71,7 +64,7 @@ export default [
   },
   {
     input: 'src/navigation.ts',
-    external: ['lodash.keyby', 'lodash.range'],
+    external: ['d3-array'],
     plugins: [typescript({ tsconfig: './tsconfig.json' })],
     output: [
       { file: 'dist/lib/navigation.js', format: 'cjs', banner: preamble },

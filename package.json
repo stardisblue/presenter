@@ -18,15 +18,13 @@
     "pretest": "npm run build"
   },
   "dependencies": {
+    "@types/d3-array": "^3.0.3",
     "@types/katex": "^0.14.0",
-    "@types/lodash.keyby": "^4.6.7",
-    "@types/lodash.range": "^3.2.7",
     "@types/marked": "^4.0.3",
+    "d3-array": "^3.2.0",
     "highlight.js": "^11.6.0",
     "htl": "^0.3.1",
     "katex": "^0.16.0",
-    "lodash.keyby": "^4.6.0",
-    "lodash.range": "^3.2.0",
     "marked": "^4.0.18"
   },
   "devDependencies": {

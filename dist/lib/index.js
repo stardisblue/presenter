@@ -3,8 +3,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var keyBy = require('lodash.keyby');
-var range = require('lodash.range');
+var d3Array = require('d3-array');
 var htl = require('htl');
 var marked = require('marked');
 var hljs = require('highlight.js/lib/common');
@@ -12,8 +11,6 @@ var Katex = require('katex');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-var keyBy__default = /*#__PURE__*/_interopDefaultLegacy(keyBy);
-var range__default = /*#__PURE__*/_interopDefaultLegacy(range);
 var hljs__default = /*#__PURE__*/_interopDefaultLegacy(hljs);
 var Katex__default = /*#__PURE__*/_interopDefaultLegacy(Katex);
 
@@ -38,8 +35,8 @@ function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', '
     // 'Space',
 ], stopPropagation = false, } = {}) {
     const keys = {
-        previous: keyBy__default["default"](previousKeys),
-        next: keyBy__default["default"](nextKeys),
+        previous: new Set(previousKeys),
+        next: new Set(nextKeys),
     };
     const listeners = {
         previous: undefined,
@@ -77,7 +74,7 @@ function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', '
         },
         collect(offset = 1) {
             const bounded = Math.max(Math.min(offset + nav.current, max - 1), 0);
-            return range__default["default"](nav.current + 1, bounded + 1, Math.sign(offset));
+            return d3Array.range(nav.current + 1, bounded + 1, Math.sign(offset));
         },
         page(goto) {
             if (goto !== nav.current) {
@@ -113,9 +110,9 @@ function navigation({ max = 0, previousKeys = ['ArrowUp', 'ArrowLeft', 'KeyH', '
                     nav.nextPage(event);
             },
             onKeyDown(event) {
-                if (event.code in keys.previous)
+                if (keys.previous.has(event.code))
                     nav.previousPage(event);
-                else if (event.code in keys.next)
+                else if (keys.next.has(event.code))
                     nav.nextPage(event);
             },
         },
