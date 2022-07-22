@@ -36,6 +36,8 @@ It is still by no means perfect, particularely for in-between slides animations 
 
 ### Browser
 
+[![](https://data.jsdelivr.com/v1/package/gh/stardisblue/presenter/badge)](https://www.jsdelivr.com/package/gh/stardisblue/presenter)
+
 ```html
 <div id="container"></div>
 <!-- highlight.js -->
